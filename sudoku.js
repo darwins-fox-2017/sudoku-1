@@ -1,9 +1,10 @@
 class Sudoku{
   constructor(string){
     this.initial_number = string
+    this.board = this.boardMaker()
   }
 
-  board(){// jangan di rubah
+  boardMaker(){// jangan di rubah
     var string = this.initial_number.split("")
     var board_played = []
     for(var i = 0; i < 9; i++){
@@ -16,89 +17,19 @@ class Sudoku{
     return board_played
   }
 
-  checkRow(arr = this.board()){
-    var board_row_format = arr
-    for(var i = 0; i < 9 ;i++){
-      var arr_row = board_row_format[i]
-      for (var j = 0; j < 9; j++) {
-        var temp_entry = arr_row[j]
-        if(temp_entry != "0" && j != arr_row.indexOf(temp_entry)){
-          if(arr_row.includes(temp_entry)){
-            return false
-          }
-        }
+  checkRow(row,val){
+    return !this.board[row].includes(val)
+  }
+
+  checkColumn(column, val){
+    for(let i=0; i<9; i++){
+      if(this.board[i][column] == val){
+        return false
       }
     }
     return true
   }
 
-  changetoColumn(arr){
-    var board_col_format = []
-    var board = arr
-    for(var i = 0; i < 9; i++){
-      board_col_format.push([])
-    }
-    for(i = 0; i < 9; i++){
-      for(var j = 0; j < 9; j++){
-        board_col_format[j].push(board[i][j])
-      }
-    }
-    return board_col_format
-  }
-
-  checkColumn(arr){
-    var board_col_format = this.changetoColumn(arr)
-    for(var i = 0; i < 9 ;i++){
-      var arr_col = board_col_format[i]
-      for (var j = 0; j < 9; j++) {
-        var temp_entry = arr_col[j]
-        if(temp_entry != "0" && j != arr_col.indexOf(temp_entry)){
-          if(arr_col.includes(temp_entry)){
-            return false
-          }
-        }
-      }
-    }
-    return true
-  }
-
-  changetoBox(arr){
-    var board_box_format = []
-    var board = arr
-    for(var i=0; i < 9; i++){
-      board_box_format.push([])
-    }
-
-    for(var j = 0; j < 9; j++){
-      var dumIndex1 = 0
-      var dumIndex2 = 0
-      var dumIndex3 = 0
-
-      if(j%3 === 0){// box 0,3,6
-        for(var k=0; k<3; k++){
-          for(var l=dumIndex1; l<dumIndex1+3; l++){
-            board_box_format[j].push(board[k][l])
-          }
-        }
-        dumIndex1 = dumIndex1+3
-      }else if(j%3 === 1){ // box 1,4,7
-        for(var k=3; k<6; k++){
-          for(var l=dumIndex2; l<dumIndex2+3; l++){
-            board_box_format[j].push(board[k][l])
-          }
-        }
-        dumIndex2 = dumIndex2+3
-      }else {
-        for(var k=6; k<9; k++){ // box 2,5,8
-          for(var l=dumIndex3; l<dumIndex3+3; l++){
-            board_box_format[j].push(board[k][l])
-          }
-        }
-        dumIndex3 = dumIndex3+3
-      }
-    }
-    return board_box_format
-  }
 
   checkBox(arr = this.board()){
     var board_box_format = this.changetoBox(arr)
