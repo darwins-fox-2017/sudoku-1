@@ -10,7 +10,7 @@ class Sudoku{
     for(var i = 0; i < 9; i++){
       board_played[i] = []
       for(var j = 0; j < 9; j++){
-        board_played[i].push(string[0])
+        board_played[i].push(Number(string[0]))
         string.shift()
       }
     }
@@ -31,65 +31,62 @@ class Sudoku{
   }
 
 
-  checkBox(arr = this.board()){
-    var board_box_format = this.changetoBox(arr)
-    for(var i = 0; i < 9 ;i++){
-      var arr_box = board_box_format[i]
-      for (var j = 0; j < 9; j++) {
-        var temp_entry = arr_box[j]
-        if(temp_entry != "0" && j != arr_box.indexOf(temp_entry)){
-          if(arr_box.includes(temp_entry)){
-            return false
-          }
+  checkBox(x,y,val){
+    let index_x = Math.floor(x/3)*3
+    let index_y = Math.floor(y/3)*3
+    for(let x=index_x; x<=index_x+2; x++){
+      for(let y=index_y; y<=index_y+2; y++){
+        if(this.board[x][y] == val){
+          return false
         }
       }
     }
     return true
   }
 
-  solve(x = 0, y = 0, board = this.board()){
-
-    // console.log(this.checkRow(board));
-    // console.log(this.checkColumn(board));
-    // console.log(this.checkBox(board));
-    if(board[x][y] == '0'){
-      board[x][y] = String(Number(board[x][y])+1)
-      if(this.checkRow(board)){
-        board[x][y] = String(Number(board[x][y])+1)
-        y++
-        if(y == 9){
-          x++
-          y = 0
-          if(x == 9){
-            return this.solve(x, y, board)
-            // return board
+  solve(){
+    let x = 0
+    let y = 1
+    let flag = false
+    let temp = this.board
+    // console.log(this.board);
+    // while(!flag){
+      if(this.board[x][y] === 0){
+        let num = Math.floor(Math.random()*9)+1
+        if(this.checkRow(x,num)){
+          this.board[x][y] = num
+          y++
+          if(y == 9){
+            y = 1
+            x++
+            if(x == 9){
+              return this.board
+            }
           }
         }
       }
       else{
-        board[x][y] = '0'
-        return this.solve(x, y, board)
-      }
-    }else{
-      y++
-      if(y == 9){
-        x++
-        y = 0
-        if(x == 9){
-          return console.log(board)
-          // return board
+        y++
+        if(y == 9){
+          y = 1
+          x++
+          if(x == 9){
+            return this.board
+          }
         }
       }
-      return this.solve(x, y, board)
-
-    }
-
-
-
   }
-
-
 }
+// if(y<9){
+//   y++
+//   if(y == 9){
+//     y = 1
+//     x++
+//     if(x == 9){
+//       return "selesai"
+//     }
+//   }
+// }
 
 
 var fs = require('fs')
@@ -100,6 +97,6 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 var game = new Sudoku(board_string)
 
 // Remember: this will just fill out what it can and not "guess"
-game.solve()
+console.log(game.solve())
 
 // console.log(game.board())
