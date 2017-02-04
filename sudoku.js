@@ -4,7 +4,7 @@ class Sudoku{
     this.board = this.boardMaker()
   }
 
-  boardMaker(){// jangan di rubah
+  boardMaker(){
     var string = this.initial_number.split("")
     var board_played = []
     for(var i = 0; i < 9; i++){
@@ -49,50 +49,41 @@ class Sudoku{
     let y = 0
     let temp = this.board
     let flag = true
-    let tempXY = [] // merekan indeks yang dikunjungi beserta nilai yang diassign
-
-    let num = 1 //Math.floor(Math.random()*9)+1
+    let tempXY = [] // tempat merekam indeks yang dikunjungi beserta nilai yang diassign
+    console.log(temp) // papan awal
+    let num = 1
 
     while(x<9 || y<9){
-      if(this.board[x][y] === 0 ){
+      if(this.board[x][y] === 0){
 
         if(this.checkBox(x,y,num) && this.checkRow(x,num) && this.checkColumn(y,num) && flag){
-          // rubah di sini===============================
+          console.log(this.board) // proses pengisian
           flag =true
           tempXY.push({'x' : x, 'y': y, 'nilai': num})
           this.board[x][y] = num // assign jadi num (kondisi nya semua terpenuhi)
-          num = 1 // klau fit, pindah ke kotak selanjutnya dan reset num jadi 1
-          //========= sudah oke sampai sini
+          num = 1 // pindah ke kotak selanjutnya dgn reset num jadi 1
           y++
-          // console.log(this.board[0]);
-          console.log(this.board);
-          console.log("============");
-          // console.log("lil");
           if(y == 9){
             y = 0
             x++
             if(x == 9){
-              // console.log(this.board);
               return this.board
             }
           }
         }else{
-          // num++ // kalau angka g fit di kotak, tambah dan ulangi ke atas
           if(num<9){
-            num++
+            num++// kalau angka g sesuai di kotak, tambah dan ulangi ke atas
           }
-          else{//artinya semua angka g cocok , balik ke koordinat sebelumnya
+          else{//artinya semua angka g cocok , balik ke koordinat yg diisi sebelumnya
             x = tempXY[tempXY.length-1].x
             y = tempXY[tempXY.length-1].y
             num = tempXY[tempXY.length-1].nilai + 1
             if(num > 9){
-              flag = false
+              flag = false // angka kotak sebelumnya juga 9, balik ke kotak sebelumnya
             }else{
               flag = true
             }
             tempXY.pop()
-            // console.log("lol");
-            // console.log(tempXY);
             this.board[x][y] = 0
           }
 
@@ -112,22 +103,11 @@ class Sudoku{
     }
   }
 }
-// if(y<9){
-//   y++
-//   if(y == 9){
-//     y = 1
-//     x++
-//     if(x == 9){
-//       return "selesai"
-//     }
-//   }
-// }
-
 
 var fs = require('fs')
-var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
+var board_string = fs.readFileSync('set-01_sample.unsolved.txt')//('set-01_sample.unsolved.txt')
   .toString()
-  .split("\n")[10]
+  .split("\n")[13]
 
 var game = new Sudoku(board_string)
 
