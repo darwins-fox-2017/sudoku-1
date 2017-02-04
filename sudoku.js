@@ -47,28 +47,59 @@ class Sudoku{
   solve(){
     let x = 0
     let y = 0
-    let flag = false
     let temp = this.board
-    // console.log(this.board);
+    let flag = true
+    let tempXY = [] // merekan indeks yang dikunjungi beserta nilai yang diassign
+
+    let num = 1 //Math.floor(Math.random()*9)+1
+
     while(x<9 || y<9){
-      if(this.board[x][y] === 0){
-        let num = Math.floor(Math.random()*9)+1
-        if(this.checkBox(x,y,num) && this.checkRow(x,num) && this.checkColumn(y,num)){
-          this.board[x][y] = num
+      if(this.board[x][y] === 0 ){
+
+        if(this.checkBox(x,y,num) && this.checkRow(x,num) && this.checkColumn(y,num) && flag){
+          // rubah di sini===============================
+          flag =true
+          tempXY.push({'x' : x, 'y': y, 'nilai': num})
+          this.board[x][y] = num // assign jadi num (kondisi nya semua terpenuhi)
+          num = 1 // klau fit, pindah ke kotak selanjutnya dan reset num jadi 1
+          //========= sudah oke sampai sini
           y++
-          console.log(this.board[0]);
-          console.log(this.board[2]);
+          // console.log(this.board[0]);
+          console.log(this.board);
           console.log("============");
+          // console.log("lil");
           if(y == 9){
             y = 0
             x++
             if(x == 9){
+              // console.log(this.board);
               return this.board
             }
           }
+        }else{
+          // num++ // kalau angka g fit di kotak, tambah dan ulangi ke atas
+          if(num<9){
+            num++
+          }
+          else{//artinya semua angka g cocok , balik ke koordinat sebelumnya
+            x = tempXY[tempXY.length-1].x
+            y = tempXY[tempXY.length-1].y
+            num = tempXY[tempXY.length-1].nilai + 1
+            if(num > 9){
+              flag = false
+            }else{
+              flag = true
+            }
+            tempXY.pop()
+            // console.log("lol");
+            // console.log(tempXY);
+            this.board[x][y] = 0
+          }
+
         }
       }
       else{
+        flag = true
         y++
         if(y == 9){
           y = 0
