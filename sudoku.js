@@ -46,18 +46,21 @@ class Sudoku{
 
   solve(){
     let x = 0
-    let y = 1
+    let y = 0
     let flag = false
     let temp = this.board
     // console.log(this.board);
-    // while(!flag){
+    while(x<9 || y<9){
       if(this.board[x][y] === 0){
         let num = Math.floor(Math.random()*9)+1
-        if(this.checkRow(x,num)){
+        if(this.checkBox(x,y,num) && this.checkRow(x,num) && this.checkColumn(y,num)){
           this.board[x][y] = num
           y++
+          console.log(this.board[0]);
+          console.log(this.board[2]);
+          console.log("============");
           if(y == 9){
-            y = 1
+            y = 0
             x++
             if(x == 9){
               return this.board
@@ -68,13 +71,14 @@ class Sudoku{
       else{
         y++
         if(y == 9){
-          y = 1
+          y = 0
           x++
           if(x == 9){
             return this.board
           }
         }
       }
+    }
   }
 }
 // if(y<9){
@@ -92,7 +96,7 @@ class Sudoku{
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
-  .split("\n")[0]
+  .split("\n")[10]
 
 var game = new Sudoku(board_string)
 
