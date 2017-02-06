@@ -83,7 +83,7 @@ class Sudoku {
   }
 
   getNextField(row, col) {
-    col++ 
+    col++
 
     if (col>8) {
       col=0 
@@ -91,36 +91,50 @@ class Sudoku {
     }
 
     if (row>8) {
-      return null
+      return undefined
     }
     return this.solve(row, col)
   }
 
+  allFilled() {
+    let unsolvedString = this.unsolvedBoard.toString()
+    let zeroFound = unsolvedString.match(/0/g)
+    return zeroFound === null
+  }
+
   solve(row=0, col=0) {
+    erase()
     console.log(this.unsolvedBoard)
-    if (row > 8 && col > 8) {
+    // console.log(row,col)
+
+    if (this.allFilled()) {
       // console.log('tes');
       return true
     }
 
+
+
     if (this.unsolvedBoard[row][col] != 0) {
-      return this.solve(this.getNextField(row, col)) 
+      return this.getNextField(row, col)
     }
 
     for (let i = 1; i <= 9; i++) {
+      // console.log(this.isSafe(row, col, i), i)
       if (!this.isSafe(row, col, i)) {
         continue;
+      } else {
+        this.unsolvedBoard[row][col] = i.toString()
+
+        sleep(600)
+
+        if (this.getNextField(row, col)) {
+          return true
+        } else {
+          let zero = 0
+          this.unsolvedBoard[row][col] = zero.toString()
+        }
       }
 
-      this.unsolvedBoard[row][col] = i.toString()
-
-
-      if (this.solve(this.getNextField(row, col))) {
-        return true
-      } else {
-        let zero = 0 
-        this.unsolvedBoard[row][col] = zero.toString()
-      } 
     }
 
     return false
@@ -151,8 +165,8 @@ class Sudoku {
 
   // Returns a string representing the current state of the board
   board() {
-    console.log(this.tes);
-    return this.unsolvedBoard
+    // console.log(this.tes)
+      return this.unsolvedBoard
   }
 }
 
@@ -173,7 +187,7 @@ function erase() {
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
-  .split("\n")[0]
+  .split("\n")[1]
 
 var game = new Sudoku(board_string)
 
@@ -183,6 +197,7 @@ game.solve()
 // console.log(game.board())
 
 console.log(game.board())
+// console.log(game.allFilled())
 
 // console.log(game.unsolvedBoard[9][9])
 // console.log(game.isEmpty(0, 1))
