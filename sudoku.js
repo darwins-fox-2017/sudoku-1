@@ -10,44 +10,45 @@ class Sudoku {
   solve() {
     console.log(this.boardArr9x9);
     console.log('-------------------------------');
-    let iterasi=0
-    do {
-      iterasi++;
-  this.boardArr9x9=this.boardStringtoArr(this.boardString);
-   //console.log(this.boardArr9x9);
+
+     let boardArr9x9=this.boardStringtoArr(this.boardString);
+     let empetyPosition=this.findEmpetyPossition(boardArr9x9);
+    //console.log(empetyPosition);
     //console.log('-------------------------------',iterasi);
-      var outputBoard=this.solvingBoardOneIteration(this.boardArr9x9);
-      //console.log(outputBoard);
-      //console.log('---------------');
-      var testboard=this.testBoard(outputBoard);
-   } while (testboard&&iterasi<100000);
-this.boardNew9x9=outputBoard;
+      var outputBoard=this.solvingBoardOneIteration(boardArr9x9,empetyPosition);
+   this.boardNew9x9=outputBoard;
  }
 
   //solving board for one iteration
-  solvingBoardOneIteration(boardArr9x9){
-    //search empety possition
-    let empetyPosition=this.findEmpetyPossition(boardArr9x9);
-    let outputboard=boardArr9x9;
-    //console.log(empetyPosition);
-    //repeat asmuch as empety possition
-    for (let i = 0; i < empetyPosition.length;i++) {
-      let line=empetyPosition[i][0];
-      let coll=empetyPosition[i][1];
-      //console.log(line,coll);
-      //colect number that availibel
-      let availValue=[];
-      for (let value = 1; value < 10; value++) {
-        if (!this.checkNumber(boardArr9x9, line, coll, value)) {
-          availValue.push(value);
+  solvingBoardOneIteration(boardArr9x9,empetyPosition){
+    let board=boardArr9x9;
+    let empety=empetyPosition;
+    let line,coll,find,value,i
+    for ( i = 0; i < empety.length;) {
+      line=empety[i][0];
+      coll=empety[i][1];
+      value=parseInt(board[line][coll])+1;
+      find=false;
+      while (!find&&value<=9) {
+        if (!this.checkNumber(board, line, coll, value)) {
+          find=true;
+          board[line][coll]=''+value;
+          i++;
+        }else {
+          value++;
         }
-      }
-      let inputValue=this.getNumberFromAvailNumber(availValue);
-      //console.log(line,coll,availValue,inputValue);
-      outputboard[line][coll]=''+inputValue;
-    }
 
-    return outputboard;
+      }
+
+      if (!find) {
+        board[line][coll]=0;
+        i--;
+      }
+
+    //  console.log(line,coll);
+    }
+   return board;
+
   }
 
   //test board if there still zero
@@ -165,35 +166,22 @@ this.boardNew9x9=outputBoard;
     }
 
   }
-
-
 }
 
 // The file has newlines at the end of each line,
 // so we call split to remove it (\n)
-/*var fs = require('fs')
-var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
-.toString()
-.split("\n")[0]*/
-
+var fs = require('fs')
+var board_string = fs.readFileSync('set-02_project-euler_50-easy-puzzles.txt')
+  .toString()
+  .split("\n")[6]
 //let board_string='290167308310480620678053091056312079083504210721698534062941083809026140107805062'
-//let board_string='105802000090076405200400819019007306762083090000061050007600030430020501600308900'
-//let board_string='005030081902850060600004050007402830349760005008300490150087002090000600026049503'
-//let board_string='005080700700204005320000084060105040008000500070803010450000091600508007003010600'
-let board_string='004100308010000620008200400000302809000070000701608000562001703030000040100005000'
+//console.log(board_string);
 var game = new Sudoku(board_string)
 
 // Remember: this will just fill out what it can and not "guess"
-game.solve();
+game.solve()
 game.board();
-console.log('there still zero in the board? ',game.testBoard(game.boardNew9x9));
+//console.log('there still zero in the board? ',game.testBoard(game.boardNew9x9));
 
 
-
-//console.log(game.testBoard(game.boardNew9x9));
-//console.log(game.testBoard(game.boardArr9x9));
-//console.log(game.getNumberFromAvailNumber([1,2]));
-/*console.log(game.checkColl(game.boardArr9x9,1,2));
-console.log(game.checkLine(game.boardArr9x9,0,2));
-console.log(game.check3x3(game.boardArr9x9,4,4,7));
-console.log(game.checkNumber(game.boardArr9x9,4,4,7));*/
+//console.log()
