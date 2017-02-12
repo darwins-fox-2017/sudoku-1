@@ -5,7 +5,6 @@ class Sudoku {
 
   solve() {}
 
-  // Returns a string representing the current state of the board
   board() {}
 }
 
